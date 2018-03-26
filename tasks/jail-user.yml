@@ -29,3 +29,11 @@
   when:
     - item.homedir is defined
     - user_task.changed
+
+- name: Add jail user to jail group
+  user:
+    name: "{{ item.name }}"
+    groups: "{{ ssh_chroot_jail_group_name }}"
+    append: yes
+  when:
+    - user_task.changed
