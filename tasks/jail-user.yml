@@ -5,17 +5,17 @@
     groups: "{{ item.groups | default(omit) }}"
     append: yes
     shell: "{{ item.shell | default(omit) }}"
-    home: "{{ item.home | default(omit) }}"
+    home: "{{ item.homedir | default(omit) }}"
     createhome: "{{ item.createhome | default(omit) }}"
   register: user_task
 
 - name: Ensure jailed user has a homedir inside the jail (if configured).
   file:
-    path: "{{ ssh_chroot_jail_path }}{{ item.home }}"
+    path: "{{ ssh_chroot_jail_path }}{{ item.homedir }}"
     state: directory
     owner: "{{ item.name }}"
     group: "{{ item.name }}"
-  when: item.home is defined
+  when: item.homedir is defined
 
 - name: Ensure account skeleton files are copied into jailed user's home.
   command: "cp -r -n /etc/skel/. {{ ssh_chroot_jail_path }}{{ item.home }}"
