@@ -17,6 +17,10 @@
   with_items: "{{ ssh_chroot_bins }}"
 
 - name: copy extra libraries for whoami
-  shell: "cp {{ lib64_path }}/libns* /var/jail/{{ lib64_path }}/"
-  warn: no
-  when: "'/usr/bin/whoami' in ssh_chroot_bins"
+  copy:
+    src: "{{ item }}"
+    dest: "/var/jail/{{ lib64_path }}/"
+    owner: root
+    mode: 0755
+  with_fileglob:
+    - "{{ lib64_path }}/libns*"
