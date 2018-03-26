@@ -21,8 +21,8 @@
   become: yes
   become_user: "{{ item.name }}"
   copy:
-    src: "/etc/skel"
-    dest: "{{ ssh_root_jail_path }}{{ item.homedir }}"
+    src: "/etc/skel/"
+    dest: "{{ ssh_chroot_jail_path }}{{ item.homedir }}"
     owner: "{{ item.name }}"
     group: "{{ item.name }}"
     remote_src: yes
