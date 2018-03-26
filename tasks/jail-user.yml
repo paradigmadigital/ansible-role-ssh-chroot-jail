@@ -18,11 +18,14 @@
   when: item.homedir is defined
 
 - name: Ensure account skeleton files are copied into jailed user's home.
-  command: "cp -r -n /etc/skel/. {{ ssh_chroot_jail_path }}{{ item.home }}"
   become: yes
-  become_user: "{{ item }}"
-  failed_when: False
-  warn: no
+  become_user: "{{ item.name }}"
+  copy:
+    src: "/etc/skel"
+    dest: "{{ ssh_root_jail_path }}{{ item.homedir }}"
+    owner: "{{ item.name }}"
+    group: "{{ item.name }}"
+    remote_src: yes
   when:
-    - item.home is defined
+    - item.homedir is defined
     - user_task.changed
