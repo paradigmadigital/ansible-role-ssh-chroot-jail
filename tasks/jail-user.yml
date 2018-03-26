@@ -37,3 +37,21 @@
     append: yes
   when:
     - user_task.changed
+
+- name: Ensures .ssh directory exists
+  file:
+    owner: "{{ item.name }}"
+    group: "{{ item.name }}"
+    mode: 0700
+    path: "{{ ssh_chroot_jail_path }}{{ item.homedir }}"
+    state: directory
+  when:
+    - item.ssh_key is defined
+
+- name: Copy ssh_key (if set)
+  authorized_key:
+    user: "{{ item.name }}"
+    key: "{{ lookup('file', item.ssh_key ) }}"
+    path: "{{ ssh_chroot_jail_path }}{{ item.homedir }}/.ssh/authorized_keys"
+  when:
+    - item.ssh_key is defined
